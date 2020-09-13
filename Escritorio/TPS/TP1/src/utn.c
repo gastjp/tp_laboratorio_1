@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
@@ -47,14 +48,32 @@ int multiplicarEnteros (int operadoA, int operadoB, int *resultado)
 	return retorno;
 }
 
-int getInt(int *pResultado,char *mensaje,char *mensajeError,int reintentos)
+int calcularFactorial (int operadoA, int *resultado)
+{
+	int retorno =-1;
+	int i;
+	int f=1;
+
+	if(operadoA >=0 && resultado != NULL)
+	{
+		for(i=1;i<=operadoA;i++)
+		{
+			f = f *i;
+		}
+	*resultado = f;
+	retorno = 0;
+	}
+
+	return retorno;
+}
+
+int getInt(int *pResultado,char *mensaje,char *mensajeError,int minimo, int maximo,int reintentos)
 {
 	int retorno = -1;
 	int resultadoScan;
 	int bufferInt;
 
-
-	while (reintentos >0)
+	if(pResultado != NULL && mensaje != NULL && mensajeError != NULL && minimo <= maximo && reintentos >= 0)
 	{
 		printf(mensaje);
 		__fpurge(stdin);
@@ -64,7 +83,6 @@ int getInt(int *pResultado,char *mensaje,char *mensajeError,int reintentos)
 			{
 				*pResultado = bufferInt;
 				retorno = 0;
-				break;
 			}
 		else
 		{
@@ -85,14 +103,14 @@ int getInt(int *pResultado,char *mensaje,char *mensajeError,int reintentos)
 
 
 
-int getFloat(float *pResultado,char *mensaje,char *mensajeError,int reintentos)
+int getFloat(float *pResultado,char *mensaje,char *mensajeError,int minimo, int maximo,int reintentos)
 {
 	int retorno = -1;
 	int resultadoScan;
 	float bufferFloat;
 
 
-	while (reintentos >0)
+	if(pResultado != NULL && mensaje != NULL && mensajeError != NULL && minimo <= maximo && reintentos >= 0)
 	{
 		printf(mensaje);
 		__fpurge(stdin);
@@ -102,7 +120,6 @@ int getFloat(float *pResultado,char *mensaje,char *mensajeError,int reintentos)
 			{
 				*pResultado = bufferFloat;
 				retorno = 0;
-				break;
 			}
 		else
 		{
@@ -121,7 +138,39 @@ int getFloat(float *pResultado,char *mensaje,char *mensajeError,int reintentos)
 }
 
 
+int getChar(char *pResultado,char *mensaje,char *mensajeError,int minimo, int maximo,int reintentos)
+{
+	int retorno = -1;
+	int resultadoScan;
+	char bufferChar;
 
+
+	if (pResultado != NULL && mensaje != NULL && mensajeError != NULL && minimo <= maximo && reintentos >= 0)
+	{
+		printf(mensaje);
+		__fpurge(stdin);
+		resultadoScan=scanf("%c",&bufferChar);
+
+		if (resultadoScan > 0)
+			{
+				*pResultado = bufferChar;
+				retorno = 0;
+			}
+		else
+		{
+			printf(mensajeError);
+			reintentos--;
+			printf("Reintentos restantes:%d\n",reintentos);
+		}
+	}
+
+	if (reintentos==0)
+	{
+		printf("\nno quedan reintentos!!\n");
+	}
+
+	return retorno;
+}
 /*
  * utn_getNumero : Pide al usuario un numero
  * pResultado: Direccion de memoria de la variable donde escribe el valor ingresado por el usuario
@@ -133,37 +182,4 @@ int getFloat(float *pResultado,char *mensaje,char *mensajeError,int reintentos)
  * Retorno: 0: si esta todo OK. -1: Si hubo un error
  */
 
-int utn_getNumero(int* pResultado, int minimo, int maximo, char* mensaje, char* mensajeError, int reintentos)
-{
-	int retorno = -1;
-	int numero;
-	int retornoScanf;
-
-	while(reintentos > 0)
-	{
-		printf("%s\n", mensaje);
-		__fpurge(stdin); // linussss
-		//fflush(stdin); // windorrrr
-
-		retornoScanf = scanf("%d", &numero);
-
-		if(retornoScanf==1 && numero>=minimo && numero<=maximo)
-		{
-			//escribir "numero" en la dire que tiene pResultado
-			*pResultado = numero;
-			retorno = 0;
-			break;
-		}
-		else
-		{
-			printf("%s\n", mensajeError);
-			reintentos--;
-		}
-	}
-	if(reintentos == 0)
-	{
-		printf("Se quedo sin intentos");
-	}
-	return retorno;
-}
 
